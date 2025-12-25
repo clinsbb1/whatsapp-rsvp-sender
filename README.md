@@ -1,59 +1,221 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# WhatsApp RSVP Sender
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based open-source tool for sending personalized, rate-limited WhatsApp RSVP invitations using approved WhatsApp Business templates and dynamic media (such as QR codes).
 
-## About Laravel
+This project is designed with **compliance, reliability, and production safety** in mind and can be integrated with WhatsApp Business API providers such as **Twilio**, **Termii**, or similar platforms.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Personalized WhatsApp template messages
+* Dynamic template variables (guest name, event details, links)
+* Dynamic media support (e.g. per-guest QR codes)
+* Built-in rate limiting and batch sending
+* Resume-safe delivery (prevents duplicate sends)
+* Robust error handling and logging
+* CLI-based execution via Laravel Artisan
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* PHP (Laravel)
+* WhatsApp Business API (via supported providers)
+* MySQL / PostgreSQL / SQLite (Laravel-supported databases)
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Requirements
 
-### Premium Partners
+* PHP 8.1+
+* Laravel 10+
+* A WhatsApp Business API provider account
+* At least one **approved WhatsApp template**
+* Publicly accessible HTTPS URLs for media (images)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## ⚙️ Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1️⃣ Clone the repository
 
-## Code of Conduct
+```bash
+git clone https://github.com/your-username/whatsapp-rsvp-sender.git
+cd whatsapp-rsvp-sender
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+### 2️⃣ Install dependencies
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer install
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3️⃣ Environment setup
+
+Create your environment file:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Configure your WhatsApp provider credentials (example):
+
+```env
+WHATSAPP_PROVIDER_SID=your_provider_sid
+WHATSAPP_PROVIDER_TOKEN=your_provider_token
+WHATSAPP_FROM=whatsapp:+1234567890
+WHATSAPP_TEMPLATE_SID=HXxxxxxxxxxxxxxxxx
+```
+
+> ⚠️ Templates must be approved by WhatsApp before use.
+
+---
+
+### 4️⃣ Database setup
+
+Run migrations:
+
+```bash
+php artisan migrate
+```
+
+Your guest table should include at minimum:
+
+* `full_name`
+* `phone`
+* `rsvp_image`
+* `whatsapp_sent`
+* `whatsapp_sent_at`
+
+---
+
+## 🚀 Usage (CLI)
+
+Messages are sent using a Laravel Artisan command.
+
+### Basic usage
+
+```bash
+php artisan rsvp:send-whatsapp --limit=10
+```
+
+* `--limit` specifies how many pending records to process
+* Only guests with `whatsapp_sent = false` are sent messages
+
+---
+
+### Recommended sending strategy
+
+For new or recently restored WhatsApp Business Accounts:
+
+```bash
+php artisan rsvp:send-whatsapp --limit=3
+# wait 10–15 minutes
+
+php artisan rsvp:send-whatsapp --limit=5
+# wait
+
+php artisan rsvp:send-whatsapp --limit=10
+```
+
+Gradually increase volume to avoid throttling.
+
+---
+
+## ⏱ Rate Limiting (Important)
+
+This project intentionally sends messages **slowly** to comply with WhatsApp and Meta policies.
+
+Typical safeguards include:
+
+* Delays between messages
+* Pauses between batches
+* Backoff on failures
+
+**Do not remove rate limiting** unless your WhatsApp Business Account has an established sending history.
+
+---
+
+## 📌 Important WhatsApp Compliance Notes
+
+WhatsApp Business API usage is strictly monitored.
+
+### ❌ Do NOT:
+
+* Spam the same number repeatedly
+* Test aggressively on your own phone number
+* Retry failed messages immediately
+* Send large batches too quickly
+* Change templates while actively sending
+
+---
+
+### ✅ Best practices:
+
+* Use approved templates only
+* Send messages gradually
+* Use E.164 phone number format (`+2341234567890`)
+* Ensure media URLs are HTTPS and publicly accessible
+* Avoid spaces in filenames and URLs
+* Send messages only to users who expect them
+
+---
+
+## ⚠️ Delivery Disclaimer
+
+A successful API response does **not guarantee delivery**.
+
+Delivery depends on:
+
+* Recipient availability
+* Opt-in status
+* WhatsApp quality limits
+* Meta rate enforcement
+
+Always monitor provider logs and message statuses.
+
+---
+
+## 🧪 Testing Guidelines
+
+* Use a dedicated test phone number
+* Send one test message at a time
+* Wait between tests
+* Avoid repeated testing on the same number
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+Please ensure:
+
+* Code follows Laravel best practices
+* Rate-limiting safeguards are preserved
+* New features do not violate WhatsApp or Meta policies
+
+Open a pull request with a clear description of changes.
+
+---
+
+## 📄 License
+
+This project is open-source and provided **as is**.
+You are responsible for ensuring compliance with WhatsApp, Meta, and your provider’s terms of service.
+
+---
+
+## 🚨 Final Note
+
+WhatsApp Business messaging is powerful but unforgiving.
+
+This project prioritizes **safety over speed** by default.
+If you modify sending limits or safeguards, do so carefully and at your own risk.
+
