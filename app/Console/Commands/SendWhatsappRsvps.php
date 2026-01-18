@@ -21,11 +21,11 @@ class SendWhatsappRsvps extends Command
     public function handle(WhatsAppService $whatsapp)
     {
         // 👉 EVENT CONFIG
-        $eventName  = "Wura's 40th";
-        $eventDate  = '2nd January 2026 (tomorrow)';
-        $eventVenue = 'Fame Lagos, 37 Glover Court, Off Glover Road, Ikoyi, Lagos';
-        $eventTime  = '3:30 PM';
-        $googleMapsUrl = 'https://maps.google.com/?q=Fame+Lagos,+37+Glover+Court,+Off+Glover+Road,+Ikoyi,+Lagos';
+        $eventName  = "Traditional wedding of Ibukun & Abayomi";
+        $eventDate  = 'Friday, 13th February 2026';
+        $eventVenue = 'Marcellina\'s place, Ikeja, Lagos';
+        $eventTime  = '1:00 PM';
+        $googleMapsUrl = '[Available on request]';
 
         $limit = (int) $this->option('limit');
 
