@@ -2,29 +2,53 @@
 
 namespace App\Console\Commands;
 
+use App\Models\SmsRecipient;
 use App\Services\SmsService;
 use Illuminate\Console\Command;
 
 class SendSms extends Command
 {
-    protected $signature = 'sms:send';
-    protected $description = 'Send an SMS via Twilio';
+    protected $signature = 'sms:send {--limit= : Number of SMS to send}';
+    protected $description = 'Send wedding invite SMS to all unsent recipients';
 
     public function handle(SmsService $sms): int
     {
-        // ====== EDIT THESE VALUES ======
-        $phone = '+2348038308186';
-        $message = "You're invited! Ibukun & Abayomi Traditional Wedding.\nAccess card: https://invyt.ng/samples/X7F4N.png\nPlease present this at the venue for entry.";
-        // ================================
+        $query = SmsRecipient::where('sent', false);
 
-        try {
-            $sms->send($phone, $message);
-            $this->info("SMS sent to {$phone}");
-            $this->info("Message: {$message}");
-            return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $this->error("Failed: " . $e->getMessage());
-            return Command::FAILURE;
+        // Apply limit if specified
+        if ($limit = $this->option('limit')) {
+            $query->limit((int) $limit);
         }
+
+        $recipients = $query->get();
+
+        if ($recipients->isEmpty()) {
+            $this->info('No pending recipients found.');
+            return Command::SUCCESS;
+        }
+
+        $this->info("Sending SMS to {$recipients->count()} recipients...");
+
+        foreach ($recipients as $recipient) {
+            $message = "You're invited! Ibukun & Abayomi Traditional Wedding.\nAccess card: https://invyt.ng/samples/{$recipient->code}.png\nShow at venue for entry.\nDo not reply";
+
+            try {
+                $sms->send($recipient->phone, $message);
+
+                $recipient->update([
+                    'sent' => true,
+                    'sent_at' => now(),
+                ]);
+
+                $this->info("✓ Sent to {$recipient->phone}");
+            } catch (\Exception $e) {
+                $this->error("✗ Failed for {$recipient->phone}: " . $e->getMessage());
+            }
+
+            sleep(3); // Rate limiting
+        }
+
+        $this->info('Done!');
+        return Command::SUCCESS;
     }
 }
