@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 class SendSms extends Command
 {
     protected $signature = 'sms:send {--limit= : Number of SMS to send}';
-    protected $description = 'Send wedding invite SMS to all unsent recipients';
+    protected $description = 'Send invite SMS to all unsent recipients';
 
     public function handle(SmsService $sms): int
     {
@@ -30,7 +30,7 @@ class SendSms extends Command
         $this->info("Sending SMS to {$recipients->count()} recipients...");
 
         foreach ($recipients as $recipient) {
-            $message = "You're invited! Ibukun & Abayomi Traditional Wedding.\nAccess card: https://invyt.ng/samples/{$recipient->code}.png\nShow at venue for entry.\nDo not reply";
+            $message = "You're invited! T-POP (Ten-Ten turns Ten) Birthday Party.\nAccess card: https://invyt.ng/samples/{$recipient->code}.jpg\nShow at venue for entry.\nDo not reply";
 
             try {
                 $sms->send($recipient->phone, $message);
