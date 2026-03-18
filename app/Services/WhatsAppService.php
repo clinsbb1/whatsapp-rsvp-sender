@@ -29,23 +29,26 @@ class WhatsAppService
         string $googleMapsUrl,
         string $qrImageUrl
     ) {
+
+        $this->client->messages->create(
+            "whatsapp:$phone",
+            [
+                'from' => config('services.twilio.whatsapp_from'),
+                'contentSid' => config('services.twilio.image_template_sid'),
+                'contentVariables' => json_encode((object)[]), // empty object, not array
+            ]
+        );
+
+        sleep(3);
+
         return $this->client->messages->create(
             "whatsapp:$phone",
             [
                 'from' => config('services.twilio.whatsapp_from'),
-
-                // Approved WhatsApp template
-                'contentSid' => config('services.twilio.template_sid'),
-
-                // Template variables {{1}} - {{5}}
+                'contentSid' => config('services.twilio.text_template_sid'),
                 'contentVariables' => json_encode([
                     "1" => $name,
-                    "2" => $eventName,
-                    "3" => $eventDate,
-                    "4" => $eventVenue,
-                    "5" => $eventTime,
-                    "6" => $googleMapsUrl,
-                    "7" => $qrImageUrl,
+                    "2" => 'Abolore Solebo',
                 ]),
             ]
         );

@@ -21,20 +21,22 @@ class SendWhatsappRsvps extends Command
     public function handle(WhatsAppService $whatsapp)
     {
         // 👉 EVENT CONFIG
-        /*
+
         $eventName  = "T-POP (Ten-Ten turns Ten) Birthday Party";
         $eventDate  = 'Sunday, 15th February 2026';
-        $eventVenue = 'Banana Island Playground, Ikoyi, Lagos, Nigeria (Estate Code is T-POP)';
-        $eventTime  = '1:00 PM - 7:00 PM';
+        $eventVenue = 'Banana Island Playground, Ikoyi, Lagos, Nigeria';
+        $eventTime  = '1:00 PM - 7:00 PM. Kindly note that the Estate Code is T-POP. Please provide this code at the gate for entry';
         //$fullAddress = 'Lekki, Lagos, Nigeria';
         $fullAddress = '[Available on request]';
-        */
 
+
+        /*
         $eventName  = "Traditional wedding of Ibukun & Abayomi";
         $eventDate  = 'Friday, 13th February 2026';
         $eventVenue = 'Marcellina\'s place, Ikeja, Lagos';
         $eventTime  = '1:00 PM';
         $fullAddress = '[Available on request]';
+        */
 
         $limit = (int) $this->option('limit');
 
@@ -70,7 +72,7 @@ class SendWhatsappRsvps extends Command
                     $eventVenue,
                     $eventTime,
                     $fullAddress,
-                    $guest->rsvp_image
+                    $guest->rsvp_image ?? '-'
                 );
 
                 // ✅ Only mark as sent if Twilio accepted it
