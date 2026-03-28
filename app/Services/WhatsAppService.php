@@ -36,8 +36,8 @@ class WhatsAppService
                 'from' => config('services.twilio.whatsapp_from'),
                 'contentSid' => config('services.twilio.template_sid'),
                 'contentVariables' => json_encode([
-                    //"1" => $name,
-                    "1" => $qrImageUrl,
+                    "1" => $name,
+                    "2" => $qrImageUrl,
                 ]),
             ]
         );
