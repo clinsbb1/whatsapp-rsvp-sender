@@ -30,25 +30,14 @@ class WhatsAppService
         string $qrImageUrl
     ) {
 
-        $this->client->messages->create(
-            "whatsapp:$phone",
-            [
-                'from' => config('services.twilio.whatsapp_from'),
-                'contentSid' => config('services.twilio.image_template_sid'),
-                'contentVariables' => json_encode((object)[]), // empty object, not array
-            ]
-        );
-
-        sleep(3);
-
         return $this->client->messages->create(
             "whatsapp:$phone",
             [
                 'from' => config('services.twilio.whatsapp_from'),
-                'contentSid' => config('services.twilio.text_template_sid'),
+                'contentSid' => config('services.twilio.template_sid'),
                 'contentVariables' => json_encode([
-                    "1" => $name,
-                    "2" => 'Abolore Solebo',
+                    //"1" => $name,
+                    "1" => $qrImageUrl,
                 ]),
             ]
         );

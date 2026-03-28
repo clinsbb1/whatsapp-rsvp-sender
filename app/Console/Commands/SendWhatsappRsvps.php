@@ -72,7 +72,7 @@ class SendWhatsappRsvps extends Command
                     $eventVenue,
                     $eventTime,
                     $fullAddress,
-                    $guest->rsvp_image ?? '-'
+                    $guest->rsvp_image
                 );
 
                 // ✅ Only mark as sent if Twilio accepted it
