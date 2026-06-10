@@ -108,6 +108,50 @@ php artisan rsvp:send-whatsapp --limit=10
 * `--limit` specifies how many pending records to process
 * Only guests with `whatsapp_sent = false` are sent messages
 
+### Infobip template usage
+
+The project now includes a parallel Infobip sender that uses the same `rsvp_guests` table and the same `whatsapp_sent` tracking fields:
+
+```bash
+php artisan rsvp:send-whatsapp-infobip --limit=10
+```
+
+Optional dry run:
+
+```bash
+php artisan rsvp:send-whatsapp-infobip --limit=3 --dry-run
+```
+
+Set the template and media-header details in `.env`:
+
+```env
+INFOBIP_BASE_URL=https://api.infobip.com
+INFOBIP_API_KEY=your_infobip_api_key
+INFOBIP_WHATSAPP_FROM=447492263897
+INFOBIP_WHATSAPP_TEMPLATE_NAME=your_approved_template_name
+INFOBIP_WHATSAPP_TEMPLATE_LANGUAGE=en_GB
+INFOBIP_WHATSAPP_HEADER_TYPE=IMAGE
+INFOBIP_WHATSAPP_HEADER_MEDIA_URL=guest_image_url
+INFOBIP_WHATSAPP_BODY_PLACEHOLDERS=guest_name,event_name,event_date,event_venue,event_time
+```
+
+If `rsvp_guests.rsvp_image` stores just a filename, also set:
+
+```env
+RSVP_GUEST_IMAGE_BASE_URL=https://your-domain.com/path-to-images
+```
+
+`INFOBIP_WHATSAPP_HEADER_MEDIA_URL` can be either:
+
+* `guest_image_url` to use each guest's `rsvp_image`
+* a full HTTPS URL to use the same image/video/document for everyone
+
+If your Infobip template has dynamic buttons, set `INFOBIP_WHATSAPP_BUTTONS_JSON` to a JSON array such as:
+
+```env
+INFOBIP_WHATSAPP_BUTTONS_JSON=[{"type":"URL","parameter":"guest_name"}]
+```
+
 ---
 
 ### Recommended sending strategy
@@ -218,4 +262,3 @@ WhatsApp Business messaging is powerful but unforgiving.
 
 This project prioritizes **safety over speed** by default.
 If you modify sending limits or safeguards, do so carefully and at your own risk.
-

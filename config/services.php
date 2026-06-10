@@ -43,4 +43,12 @@ return [
         'phone' => env('TWILIO_PHONE_NUMBER'),
     ],
 
+    'infobip' => [
+        'base_url' => env('INFOBIP_BASE_URL', 'https://api.infobip.com'),
+        'api_key' => env('INFOBIP_API_KEY'),
+        'whatsapp_from' => env('INFOBIP_WHATSAPP_FROM'),
+        'whatsapp_template_name' => env('INFOBIP_WHATSAPP_TEMPLATE_NAME'),
+        'whatsapp_template_language' => env('INFOBIP_WHATSAPP_TEMPLATE_LANGUAGE', 'en_GB'),
+    ],
+
 ];

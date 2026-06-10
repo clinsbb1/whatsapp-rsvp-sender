@@ -92,7 +92,7 @@ class SendWhatsappRsvps extends Command
                 sleep(5);
 
                 // 🧱 Batch throttle (critical after Meta re-enable)
-                if ($sentCount > 0 && $sentCount % 10 === 0) {
+                if ($sentCount > 0 && $sentCount % 50 === 0) {
                     $this->info('Batch pause...');
                     sleep(60);
                 }

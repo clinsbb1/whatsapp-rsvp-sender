@@ -14,4 +14,9 @@ class RsvpGuest extends Model
         'whatsapp_sent',
         'whatsapp_sent_at',
     ];
+
+    protected $casts = [
+        'whatsapp_sent' => 'boolean',
+        'whatsapp_sent_at' => 'datetime',
+    ];
 }

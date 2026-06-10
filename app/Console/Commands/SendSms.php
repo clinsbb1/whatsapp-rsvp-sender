@@ -30,7 +30,8 @@ class SendSms extends Command
         $this->info("Sending SMS to {$recipients->count()} recipients...");
 
         foreach ($recipients as $recipient) {
-            $message = "You're invited! T-POP (Ten-Ten turns Ten) Birthday Party.\nAccess card: https://invyt.ng/samples/{$recipient->code}.jpg\nShow at venue for entry.\nDo not reply";
+
+            $message = "You’re invited! 70th birthday of Mrs Obiaku Akwiwu-Nwadike and the baby dedication of Ajewamiri Karisa Musa. \nAccess card: https://invyt.ng/samples/gha/new/{$recipient->code}.jpg. \nDo not reply";
 
             try {
                 $sms->send($recipient->phone, $message);

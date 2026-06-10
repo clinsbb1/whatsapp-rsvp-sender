@@ -35,25 +35,6 @@ class WhatsAppService
             [
                 'from' => config('services.twilio.whatsapp_from'),
                 'contentSid' => config('services.twilio.template_sid'),
-                'contentVariables' => json_encode([
-                    "1" => $name,
-                    "2" => $qrImageUrl,
-                    //"3" => "https://invyt.ng/modupe1.jpeg",
-                    //"3" => 'https://invyt.ng/ayotola.jpg',
-                    //"3" => "the wedding party",
-                    //"4" => "Saturday, May 16th, 2026 by 7:30PM till midnight",
-                    //"5" => $qrImageUrl,
-                    //"4" => "Please",
-                    //"5" => $qrImageUrl,
-                    //"2" => 'https://invyt.ng/rsvp/btg',
-                    //"3" => "https://invyt.ng/btg.jpeg",
-                    //"4" => "16th May, 2026 at 4:00 PM",
-                    //"5" => "(Details will follow shortly)",
-                    //"6" => "https://invyt.ng/rsvp/prof/".$qrImageUrl,
-                    //"7" => "Cruise Events (+234 916 249 4770)",
-                    //"8" => "https://invyt.ng/prof.jpeg",
-                   // "7" => "https://invyt.ng/prof1.jpeg",
-                ]),
             ]
         );
     }
